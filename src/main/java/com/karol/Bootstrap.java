@@ -28,8 +28,8 @@ public class Bootstrap implements CommandLineRunner{
 		CustomUserDetails user = new CustomUserDetails();
 		user.setFirstName("Karol");
 		user.setLastName("Wojtas");
-		user.setUsername("karolw");
-		user.setPassword(passwordEncoder.encode("password"));
+		user.setUsername(username);
+		user.setPassword(passwordEncoder.encode(password));
 		user.setRole("ROLE_USER");
 		user.setEmail("k@gmail.com");
 		repository.save(user);
