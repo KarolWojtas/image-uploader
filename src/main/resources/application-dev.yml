@@ -1,0 +1,8 @@
+admin:
+ username: karolw
+ password: password
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/karol
+    username: karol
+    password: password
