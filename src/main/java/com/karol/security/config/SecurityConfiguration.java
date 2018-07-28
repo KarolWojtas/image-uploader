@@ -20,7 +20,7 @@ import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.karol.security.util.CustomUserDetailsService;
+import com.karol.services.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity

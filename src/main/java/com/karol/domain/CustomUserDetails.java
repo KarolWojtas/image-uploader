@@ -1,4 +1,4 @@
-package com.karol.security.util;
+package com.karol.domain;
 
 
 import java.util.Collection;

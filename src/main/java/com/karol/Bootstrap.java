@@ -6,7 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.karol.security.util.CustomUserDetails;
+import com.karol.domain.CustomUserDetails;
 import com.karol.services.UserDetailsRepository;
 @Component
 public class Bootstrap implements CommandLineRunner{
