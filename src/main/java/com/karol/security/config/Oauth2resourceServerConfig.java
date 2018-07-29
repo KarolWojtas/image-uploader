@@ -26,9 +26,10 @@ public class Oauth2resourceServerConfig extends ResourceServerConfigurerAdapter{
 	private AccessDeniedHandler accessDeniedHandler;
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		http //.requestMatchers() .antMatchers("/test") 
-			.authorizeRequests().antMatchers("/test").authenticated()
-			.and() .authorizeRequests() .anyRequest() .authenticated()
+		http.authorizeRequests()
+				.antMatchers("/test/image").permitAll()
+				.antMatchers("/test").authenticated()
+				.anyRequest() .authenticated()
 			.and()
 			.exceptionHandling()
 				.accessDeniedHandler(accessDeniedHandler);

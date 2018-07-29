@@ -1,12 +1,17 @@
 package com.karol.domain;
 
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -15,16 +20,18 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class CustomUserDetails implements UserDetails{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="AUTO_USER_ID")
-	private Long autoUserId;
+	@Column(name="USER_ID")
+	private Long id;
 
 	@Column(name="FIRST_NAME")
 	private String firstName;
@@ -43,6 +50,8 @@ public class CustomUserDetails implements UserDetails{
 	
 	@Column(name = "ROLE")
 	private String role;
+	@OneToMany(mappedBy="user")
+	private List<ImageHolder> images = new ArrayList<ImageHolder>();
 	
 	
 	public String getFirstName() {
@@ -95,7 +104,7 @@ public class CustomUserDetails implements UserDetails{
 
 	@Override
 	public String toString() {
-		return "AutoUser [autoUserId=" + autoUserId + ", firstName=" + firstName + ", lastName=" + lastName
+		return "AutoUser [autoUserId=" + id + ", firstName=" + firstName + ", lastName=" + lastName
 				+ ", username=" + username + ", password=" + password + ", email=" + email + ", role=" + role + "]";
 	}
 
