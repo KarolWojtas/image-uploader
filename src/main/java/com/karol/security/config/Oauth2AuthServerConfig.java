@@ -48,7 +48,8 @@ public class Oauth2AuthServerConfig extends AuthorizationServerConfigurerAdapter
 		security.tokenKeyAccess("isAuthenticated()")
 				.checkTokenAccess("isAuthenticated()")
 				//To pozwoliło korzystać z bcrypt!!!
-				.passwordEncoder(passwordEncoder);
+				.passwordEncoder(passwordEncoder)
+				;
 	}
 
 	@Override

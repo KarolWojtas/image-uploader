@@ -1,5 +1,7 @@
 package com.karol;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -12,7 +14,8 @@ import com.karol.services.UserDetailsRepository;
 public class Bootstrap implements CommandLineRunner{
 	private UserDetailsRepository repository;
 	private PasswordEncoder passwordEncoder;
-	@Autowired
+	
+	
 	public Bootstrap(UserDetailsRepository repository, PasswordEncoder passwordEncoder) {
 		super();
 		this.repository = repository;
@@ -24,6 +27,7 @@ public class Bootstrap implements CommandLineRunner{
 	@Value("${admin.password}")
 	private String password;
 	@Override
+	@Transactional
 	public void run(String... args) throws Exception {
 		CustomUserDetails user = new CustomUserDetails();
 		user.setFirstName("Karol");
@@ -33,6 +37,8 @@ public class Bootstrap implements CommandLineRunner{
 		user.setRole("ROLE_USER");
 		user.setEmail("k@gmail.com");
 		repository.save(user);
+		
+		
 		
 	}
 

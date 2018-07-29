@@ -7,13 +7,19 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class CustomUserDetails implements UserDetails{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -37,6 +43,7 @@ public class CustomUserDetails implements UserDetails{
 	
 	@Column(name = "ROLE")
 	private String role;
+	
 	
 	public String getFirstName() {
 		return firstName;
