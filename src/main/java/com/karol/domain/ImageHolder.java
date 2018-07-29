@@ -1,6 +1,5 @@
 package com.karol.domain;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
@@ -11,10 +10,16 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ImageHolder {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -26,5 +31,9 @@ public class ImageHolder {
 	private String description;
 	@Lob
 	private byte[] image;
+	private String imageFormat;
+	private int width;
+	private int height;
+	private boolean isPublic;
 	
 }

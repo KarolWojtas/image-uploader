@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -39,7 +40,8 @@ public class CustomUserDetails implements UserDetails{
 	@Column(name="LAST_NAME")
 	private String lastName;
 
-	@Column(name="USERNAME")
+	@Column(name="USERNAME",unique=true)
+	@NotNull
 	private String username;
 
 	@Column(name="PASSWORD")
