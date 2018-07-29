@@ -6,22 +6,26 @@ import java.security.Principal;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.karol.domain.CustomUserDetails;
+import com.karol.domain.ImageHolderDTO;
+import com.karol.exceptions.BadFormatException;
 import com.karol.services.ImageService;
 import com.karol.services.UserDetailsRepository;
 
 @RestController
+@Profile("dev")
 public class TestController {
 	@Autowired
 	private ImageService imageService;
@@ -42,21 +46,11 @@ public class TestController {
 	@PostMapping("/test/image")
 	
 	public ResponseEntity<String> saveImage(@RequestParam("image") MultipartFile file,
-						@RequestParam("description") String description){
+						@RequestParam("description")String description) throws IOException, BadFormatException{
 		CustomUserDetails user = userRepository.findByUsername("karolw");
-		boolean success = false;
-		try {
-			success = imageService.saveImage(file, user, description);
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if(success) {
+			imageService.saveImage(file, user,description);
 			return ResponseEntity.accepted().build();
-		} else {
-			return ResponseEntity.badRequest().build();
-		}
+		
 		
 	}
 	

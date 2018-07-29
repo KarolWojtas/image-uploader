@@ -29,6 +29,7 @@ public class Oauth2resourceServerConfig extends ResourceServerConfigurerAdapter{
 		http.authorizeRequests()
 				.antMatchers("/test").authenticated()
 				.antMatchers("/test/**").permitAll()
+				.antMatchers("/images/**").permitAll()
 				.anyRequest() .authenticated()
 			.and()
 			.exceptionHandling()

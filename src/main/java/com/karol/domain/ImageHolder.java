@@ -27,7 +27,7 @@ public class ImageHolder {
 	@ManyToOne
 	@JoinColumn(name="user_id")
 	private CustomUserDetails user;
-	private LocalDateTime timestamp = LocalDateTime.now();
+	private LocalDateTime timestamp;
 	private String description;
 	@Lob
 	private byte[] image;
