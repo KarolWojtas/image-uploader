@@ -13,4 +13,7 @@ spring:
          non_contextual_creation: true
   profiles:
     active:
-    - dev
+    - default
+  servlet:
+    multipart:
+      max-file-size: 10MB

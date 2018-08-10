@@ -25,6 +25,10 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import com.karol.security.util.ResponseAccessDeniedHandler;
 import com.karol.services.CustomUserDetailsService;
@@ -50,6 +54,7 @@ public class Oauth2AuthServerConfig extends AuthorizationServerConfigurerAdapter
 				//To pozwoliło korzystać z bcrypt!!!
 				.passwordEncoder(passwordEncoder)
 				;
+		
 	}
 
 	@Override
@@ -58,7 +63,7 @@ public class Oauth2AuthServerConfig extends AuthorizationServerConfigurerAdapter
 				.withClient("angularClient")
 				.autoApprove(true)
 				.authorizedGrantTypes("password","authorization_code", "refresh_token")
-				.accessTokenValiditySeconds(120)
+				.accessTokenValiditySeconds(3600)
 				.refreshTokenValiditySeconds(120)
 				.scopes("read");
 	}
@@ -77,6 +82,7 @@ public class Oauth2AuthServerConfig extends AuthorizationServerConfigurerAdapter
 	public AccessDeniedHandler accessDeniedHandler() {
 		return new ResponseAccessDeniedHandler();
 	}
+
 	
 	
 }

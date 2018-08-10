@@ -39,6 +39,12 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 		return userRepository.findByUsername(username);
 	}
 
+	@Override
+	public boolean isUsernameAvailable(String username) {
+		CustomUserDetails user = userRepository.findByUsername(username);
+		return user==null;
+	}
+
 
 
 }

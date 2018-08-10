@@ -20,6 +20,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,27 +35,31 @@ public class CustomUserDetails implements UserDetails{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="USER_ID")
+	@JsonView(Views.Private.class)
 	private Long id;
-
+	@JsonView(Views.Public.class)
 	@Column(name="FIRST_NAME")
 	private String firstName;
-
+	@JsonView(Views.Public.class)
 	@Column(name="LAST_NAME")
 	private String lastName;
-
+	@JsonView(Views.Public.class)
 	@Column(name="USERNAME",unique=true)
 	@NotNull
 	private String username;
-
+	@JsonView(Views.Private.class)
 	@Column(name="PASSWORD")
+	@JsonIgnore
 	private String password;
-
+	@JsonView(Views.Private.class)
 	@Column(name="EMAIL")
 	private String email;
-	
+	@JsonView(Views.Private.class)
 	@Column(name = "ROLE")
 	private String role;
 	@OneToMany(mappedBy="user")
+	@JsonView(Views.Private.class)
+	@JsonIgnore
 	private List<ImageHolder> images = new ArrayList<ImageHolder>();
 	
 	

@@ -9,5 +9,6 @@ public interface UserDetailsService{
 	UserDetailsDTO findDtoByUsername(String username);
 	CustomUserDetails findByUsername(String username);
 	List<UserDetailsDTO> findAll();
+	boolean isUsernameAvailable(String username);
 	
 }

@@ -1,6 +1,7 @@
 package com.karol.services;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -14,10 +15,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.mvc.ControllerLinkBuilderFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.karol.controllers.ImageController;
 import com.karol.domain.AcceptedImageFormats;
 import com.karol.domain.CustomUserDetails;
 import com.karol.domain.ImageHolder;
@@ -28,12 +35,14 @@ import com.karol.exceptions.BadFormatException;
 public class ImageServiceImpl implements ImageService{
 	private ImageHolderRepository imageRepository;
 	private ImageHolderMapper mapper;
-	private static final String BASE_URL = "http://localhost:8080/images/";
+	private LinkService linkService;
+	
 	@Autowired
-	public ImageServiceImpl(ImageHolderRepository imageRepository, ImageHolderMapper mapper) {
+	public ImageServiceImpl(ImageHolderRepository imageRepository, ImageHolderMapper mapper, LinkService linkService) {
 		super();
 		this.imageRepository = imageRepository;
 		this.mapper = mapper;
+		this.linkService = linkService;
 	}
 
 	@Override
@@ -43,13 +52,14 @@ public class ImageServiceImpl implements ImageService{
 	}
 
 	@Override
-	public boolean saveImage(MultipartFile image, CustomUserDetails user,String description) throws IOException, BadFormatException {
+	
+	public boolean saveImage(MultipartFile image, CustomUserDetails user,String description, boolean isPublic) throws IOException, BadFormatException {
 		
 		ImageHolder imageHolder = ImageHolder.builder().description(description)
 								.imageFormat(extractFormat(image))
 								.image(image.getBytes())
 								.user(user)
-								.isPublic(true)
+								.isPublic(isPublic)
 								.timestamp(LocalDateTime.now())
 								.build();
 		return imageRepository.save(imageHolder) != null;
@@ -66,8 +76,9 @@ public class ImageServiceImpl implements ImageService{
 
 	@Override
 	public ImageHolderDTO getImageDto(Long imageId) {
-		
-		return mapper.imageHolderToImageHolderDto(imageRepository.findById(imageId).get());
+		ImageHolderDTO dto = mapper.imageHolderToImageHolderDto(imageRepository.findById(imageId).get());
+		dto.addLink(this.linkService.getImagelink(dto));
+		return dto;
 	}
 
 	@Override
@@ -82,7 +93,28 @@ public class ImageServiceImpl implements ImageService{
 		
 		return imageRepository.findAllByIsPublic(true).stream()
 				.map(mapper::imageHolderToImageHolderDto)
+				.map(this::addSelfLink)
 				.collect(Collectors.toList());
+	}
+	@Transactional
+	public List<ImageHolderDTO> getSlicedPublicImages(int page, int size) {
+		
+		return imageRepository.findAllByIsPublic(true, PageRequest.of(page, size))
+				.stream().map(mapper::imageHolderToImageHolderDto)
+				.map(this::addSelfLink).collect(Collectors.toList());
+	}
+	private ImageHolderDTO addSelfLink(ImageHolderDTO dto) {
+		dto.addLink(linkService.getImagelink(dto));
+		return dto;
+	}
+
+	@Override
+	@Transactional
+	public List<ImageHolderDTO> getImagesByUser(CustomUserDetails user) {
+		return imageRepository.findAllByUser(user).stream().map(mapper::imageHolderToImageHolderDto)
+				.map(this::addSelfLink)
+				.collect(Collectors.toList());
+		
 	}
 
 	

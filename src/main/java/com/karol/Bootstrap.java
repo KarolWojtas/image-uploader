@@ -47,10 +47,18 @@ public class Bootstrap implements CommandLineRunner{
 		user.setLastName("Wojtas");
 		user.setUsername(username);
 		user.setPassword(passwordEncoder.encode(password));
-		user.setRole("ROLE_USER");
+		user.setRole("ROLE_ADMIN");
 		user.setEmail("k@gmail.com");
 		repository.save(user);
 		imageRepository.save(this.saveImage(user));
+		CustomUserDetails user2 = new CustomUserDetails();
+		user2.setFirstName("Magdalena");
+		user2.setLastName("Dobska");
+		user2.setUsername("mdobska");
+		user2.setPassword(passwordEncoder.encode("henryczek123"));
+		user2.setRole("ROLE_USER");
+		user2.setEmail("mdobska@onet.pl");
+		repository.save(user2);
 		
 		
 		

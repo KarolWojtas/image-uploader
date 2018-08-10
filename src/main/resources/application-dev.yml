@@ -6,3 +6,4 @@ spring:
     url: jdbc:postgresql://localhost:5432/karol
     username: karol
     password: password
+allowed-origin: http://localhost:4200
