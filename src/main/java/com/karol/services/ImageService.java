@@ -3,6 +3,7 @@ package com.karol.services;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,5 +20,6 @@ public interface ImageService {
 	void deleteImage(Long imageId);
 	List<ImageHolderDTO> getPublicImages();
 	List<ImageHolderDTO> getSlicedPublicImages(int page, int size) ;
-	List<ImageHolderDTO> getImagesByUser(CustomUserDetails user);
+	Page<ImageHolder> getAllImagesByUser(CustomUserDetails user, Pageable page);
+	Page<ImageHolder> getPaginatedPublicImages(Pageable page);
 }

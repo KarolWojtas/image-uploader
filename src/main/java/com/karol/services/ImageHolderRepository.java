@@ -2,6 +2,7 @@ package com.karol.services;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.repository.CrudRepository;
@@ -13,4 +14,6 @@ public interface ImageHolderRepository extends CrudRepository<ImageHolder, Long>
 	Slice<ImageHolder> findAllByIsPublic(boolean isPublic, Pageable pageable);
 	List<ImageHolder> findAllByIsPublic(boolean isPublic);
 	List<ImageHolder> findAllByUser(CustomUserDetails user);
+	Page<ImageHolder> findByIsPublicOrderByTimestampDesc(boolean isPublic, Pageable page);
+	Page<ImageHolder> findAllByUserOrderByTimestampDesc(CustomUserDetails user, Pageable page);
 }

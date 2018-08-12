@@ -19,7 +19,9 @@ public class TestInterceptor extends GenericFilterBean{
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
+		
 		HttpServletRequest request = (HttpServletRequest) req;
+		
 		chain.doFilter(request, response);
 		
 	}

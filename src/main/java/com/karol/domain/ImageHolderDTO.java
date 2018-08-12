@@ -23,6 +23,7 @@ public class ImageHolderDTO {
 	private int height;
 	private String username;
 	private boolean isPublic;
+	private LocalDateTime timestamp;
 	private List<Link> links = new ArrayList<Link>();
 	
 	public ImageHolderDTO addLink(Link ...links) {

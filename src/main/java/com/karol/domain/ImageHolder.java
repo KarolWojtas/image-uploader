@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,7 +31,6 @@ public class ImageHolder {
 	private CustomUserDetails user;
 	private LocalDateTime timestamp;
 	private String description;
-	@Lob
 	private byte[] image;
 	private String imageFormat;
 	private int width;

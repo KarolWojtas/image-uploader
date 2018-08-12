@@ -110,11 +110,14 @@ public class ImageServiceImpl implements ImageService{
 
 	@Override
 	@Transactional
-	public List<ImageHolderDTO> getImagesByUser(CustomUserDetails user) {
-		return imageRepository.findAllByUser(user).stream().map(mapper::imageHolderToImageHolderDto)
-				.map(this::addSelfLink)
-				.collect(Collectors.toList());
+	public Page<ImageHolder> getAllImagesByUser(CustomUserDetails user, Pageable page) {
+		return imageRepository.findAllByUserOrderByTimestampDesc(user, page);
 		
+	}
+
+	@Override
+	public Page<ImageHolder> getPaginatedPublicImages(Pageable page) {
+		return imageRepository.findByIsPublicOrderByTimestampDesc(true, page);
 	}
 
 	

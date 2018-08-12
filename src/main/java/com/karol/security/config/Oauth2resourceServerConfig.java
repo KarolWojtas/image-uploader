@@ -5,9 +5,11 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,15 +28,15 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 @Configuration
 @EnableResourceServer
-@EnableGlobalMethodSecurity(prePostEnabled=true)
+@EnableGlobalMethodSecurity(prePostEnabled=true, order=Ordered.HIGHEST_PRECEDENCE)
 public class Oauth2resourceServerConfig extends ResourceServerConfigurerAdapter{
 	@Autowired
 	private AccessDeniedHandler accessDeniedHandler;
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-				.antMatchers("/images/**").permitAll()
-				//.antMatchers("/users/**").permitAll()
+				//.regexMatchers(HttpMethod.GET, "/image").permitAll()
+				.antMatchers(HttpMethod.GET,"/images/**").permitAll()
 				.anyRequest() .authenticated()
 			.and()
 			.exceptionHandling()

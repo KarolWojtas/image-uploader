@@ -5,6 +5,9 @@ import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -20,11 +23,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.karol.domain.CustomUserDetails;
 import com.karol.domain.ImageHolder;
 import com.karol.domain.ImageHolderDTO;
+import com.karol.domain.PageDto;
 import com.karol.domain.Views;
+import com.karol.domain.mappers.ImagePageMapper;
 import com.karol.exceptions.BadFormatException;
 import com.karol.services.ImageService;
 import com.karol.services.UserDetailsService;
@@ -34,11 +40,13 @@ import com.karol.services.UserDetailsService;
 public class ImageController {
 	private UserDetailsService userService;
 	private ImageService imageService;
+	private ImagePageMapper imagePageMapper;
 	@Autowired
-	public ImageController(UserDetailsService userService, ImageService imageService) {
+	public ImageController(UserDetailsService userService, ImageService imageService, ImagePageMapper imagePageMapper) {
 		super();
 		this.userService = userService;
 		this.imageService = imageService;
+		this.imagePageMapper = imagePageMapper;
 	}
 	@GetMapping("/images/{id}")
 	public ResponseEntity<byte[]> getImage(@PathVariable Long id){
@@ -65,14 +73,18 @@ public class ImageController {
 		
 	}
 	@GetMapping(value="/images/all")
-	@PreAuthorize("permitAll()")
+	@PreAuthorize("permitAll")
 	public List<ImageHolderDTO> getAllPublicImages(){
 		return imageService.getPublicImages();
 	}
-	@GetMapping(value="/images/paged")
-	@PreAuthorize("permitAll()")
-	public List<ImageHolderDTO> pagePagedPublicImages(@RequestParam(name="page", defaultValue="0")String page){
-		return imageService.getSlicedPublicImages(Integer.valueOf(page), 5);
+	@GetMapping(value="/images")
+	@PreAuthorize("permitAll")
+	public PageDto<ImageHolderDTO> pagePagedPublicImages(@RequestParam(name="page", defaultValue="0")String page, 
+			@RequestParam(value="size", defaultValue="1")String size){
+		PageDto<ImageHolderDTO> pageDto = imagePageMapper.pageToPageDto(
+				imageService.getPaginatedPublicImages(PageRequest.of(Integer.valueOf(page), Integer.valueOf(size))), true
+				) ;
+		return pageDto;
 	}
 	@DeleteMapping("/images/{id}")
 	public void deleteImage(@PathVariable Long id) {
@@ -83,8 +95,9 @@ public class ImageController {
 	}
 	@GetMapping("/images/my")
 	@PreAuthorize("isAuthenticated()")
-	public List<ImageHolderDTO> getImagesOfPrincipal(){
+	public PageDto<ImageHolderDTO> getImagesOfPrincipal(@RequestParam(value="page", defaultValue="0") String page, 
+			@RequestParam(value="size", defaultValue="3") String size){
 		CustomUserDetails user = userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-		return imageService.getImagesByUser(user);
+		return imagePageMapper.pageToPageDto(imageService.getAllImagesByUser(user, PageRequest.of(Integer.valueOf(page), Integer.valueOf(size))),false);
 	}
 }
