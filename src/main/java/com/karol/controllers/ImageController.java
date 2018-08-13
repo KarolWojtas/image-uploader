@@ -3,6 +3,7 @@ package com.karol.controllers;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -72,17 +73,14 @@ public class ImageController {
 		
 		
 	}
-	@GetMapping(value="/images/all")
-	@PreAuthorize("permitAll")
-	public List<ImageHolderDTO> getAllPublicImages(){
-		return imageService.getPublicImages();
-	}
+	
 	@GetMapping(value="/images")
 	@PreAuthorize("permitAll")
 	public PageDto<ImageHolderDTO> pagePagedPublicImages(@RequestParam(name="page", defaultValue="0")String page, 
-			@RequestParam(value="size", defaultValue="1")String size){
+			@RequestParam(value="size", defaultValue="1")String size, TimeZone timeZone){
+		
 		PageDto<ImageHolderDTO> pageDto = imagePageMapper.pageToPageDto(
-				imageService.getPaginatedPublicImages(PageRequest.of(Integer.valueOf(page), Integer.valueOf(size))), true
+				imageService.getPaginatedPublicImages(PageRequest.of(Integer.valueOf(page), Integer.valueOf(size))), true, timeZone
 				) ;
 		return pageDto;
 	}
@@ -96,8 +94,12 @@ public class ImageController {
 	@GetMapping("/images/my")
 	@PreAuthorize("isAuthenticated()")
 	public PageDto<ImageHolderDTO> getImagesOfPrincipal(@RequestParam(value="page", defaultValue="0") String page, 
-			@RequestParam(value="size", defaultValue="3") String size){
+			@RequestParam(value="size", defaultValue="3") String size, TimeZone timeZone){
+		
 		CustomUserDetails user = userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-		return imagePageMapper.pageToPageDto(imageService.getAllImagesByUser(user, PageRequest.of(Integer.valueOf(page), Integer.valueOf(size))),false);
+		return imagePageMapper.pageToPageDto(
+					imageService.getAllImagesByUser(user, PageRequest.of(Integer.valueOf(page), Integer.valueOf(size))),
+					false,
+					timeZone);
 	}
 }

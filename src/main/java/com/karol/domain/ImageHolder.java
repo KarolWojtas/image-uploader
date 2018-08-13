@@ -1,6 +1,7 @@
 package com.karol.domain;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,7 +30,7 @@ public class ImageHolder {
 	@ManyToOne
 	@JoinColumn(name="user_id")
 	private CustomUserDetails user;
-	private LocalDateTime timestamp;
+	private ZonedDateTime timestamp;
 	private String description;
 	private byte[] image;
 	private String imageFormat;

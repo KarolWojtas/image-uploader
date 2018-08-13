@@ -1,5 +1,6 @@
 package com.karol.domain.mappers;
 
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import com.karol.services.LinkService;
 public class ImagePageMapper {
 	private ImageHolderMapper mapper;
 	private LinkService linkService;
-
 	@Autowired
 	public ImagePageMapper(ImageHolderMapper mapper, LinkService linkService) {
 		super();
@@ -23,11 +23,14 @@ public class ImagePageMapper {
 		this.linkService = linkService;
 	}
 
-	public PageDto<ImageHolderDTO> pageToPageDto(Page<ImageHolder> page, boolean isPublic) {
+	public PageDto<ImageHolderDTO> pageToPageDto(Page<ImageHolder> page, boolean isPublic, TimeZone timeZone) {
 		PageDto<ImageHolderDTO> pageDto = new PageDto<>();
 		if (page != null) {
 			pageDto.setContent(
 					page.getContent().stream().map(mapper::imageHolderToImageHolderDto)
+						.map((ImageHolderDTO dto) -> {
+							return dto.convertToGivenTimeZone(timeZone);
+						})
 						.map(this::addSelfLink)
 						.collect(Collectors.toList()));
 			pageDto.setFirst(page.isFirst());
@@ -53,4 +56,5 @@ public class ImagePageMapper {
 		dto.addLink(linkService.getImagelink(dto));
 		return dto;
 	}
+	
 }

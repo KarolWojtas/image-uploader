@@ -18,8 +18,6 @@ public interface ImageService {
 	boolean saveImage(MultipartFile image, CustomUserDetails user, String description, boolean isPublic) throws IOException, BadFormatException;
 	ImageHolderDTO getImageDto(Long imageId);
 	void deleteImage(Long imageId);
-	List<ImageHolderDTO> getPublicImages();
-	List<ImageHolderDTO> getSlicedPublicImages(int page, int size) ;
 	Page<ImageHolder> getAllImagesByUser(CustomUserDetails user, Pageable page);
 	Page<ImageHolder> getPaginatedPublicImages(Pageable page);
 }

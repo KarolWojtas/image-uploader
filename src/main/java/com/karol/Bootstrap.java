@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
@@ -81,7 +84,9 @@ public class Bootstrap implements CommandLineRunner{
 		}
 		
 		imageHolder.setImage(imageArray);
-		imageHolder.setTimestamp(LocalDateTime.now());
+		ZonedDateTime time = Instant.now().atZone(ZoneId.of("GMT+00:00"));
+		System.out.println(time.toString());
+		imageHolder.setTimestamp(time);
 		return imageHolder;
 	}
 

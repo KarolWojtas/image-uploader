@@ -4,6 +4,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.Link;
@@ -32,12 +33,12 @@ public class LinkService {
 	}
 	private Link addPublicImagePageLink(int pageNumber, int size, String relName) {
 		return linkTo(methodOn(ImageController.class)
-				.pagePagedPublicImages(String.valueOf(pageNumber), String.valueOf( size)))
+				.pagePagedPublicImages(String.valueOf(pageNumber), String.valueOf( size), TimeZone.getDefault()))
 				.withRel(relName);
 	}
 	private Link addPrivateImagePageLink(int pageNumber, int size, String relName) {
 		return linkTo(methodOn(ImageController.class)
-				.getImagesOfPrincipal(String.valueOf(pageNumber), String.valueOf( size)))
+				.getImagesOfPrincipal(String.valueOf(pageNumber), String.valueOf( size), TimeZone.getDefault()))
 				.withRel(relName);
 	}
 	public List<Link> getPrivateImagePageLinks(Page<ImageHolder> page){

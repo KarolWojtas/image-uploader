@@ -2,7 +2,9 @@ package com.karol.services;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,7 +62,7 @@ public class ImageServiceImpl implements ImageService{
 								.image(image.getBytes())
 								.user(user)
 								.isPublic(isPublic)
-								.timestamp(LocalDateTime.now())
+								.timestamp(Instant.now().atZone(ZoneId.of("GMT+00:00")))
 								.build();
 		return imageRepository.save(imageHolder) != null;
 	}
@@ -85,23 +87,6 @@ public class ImageServiceImpl implements ImageService{
 	public void deleteImage(Long imageId) {
 		imageRepository.deleteById(imageId);
 		
-	}
-
-	@Override
-	@Transactional
-	public List<ImageHolderDTO> getPublicImages() {
-		
-		return imageRepository.findAllByIsPublic(true).stream()
-				.map(mapper::imageHolderToImageHolderDto)
-				.map(this::addSelfLink)
-				.collect(Collectors.toList());
-	}
-	@Transactional
-	public List<ImageHolderDTO> getSlicedPublicImages(int page, int size) {
-		
-		return imageRepository.findAllByIsPublic(true, PageRequest.of(page, size))
-				.stream().map(mapper::imageHolderToImageHolderDto)
-				.map(this::addSelfLink).collect(Collectors.toList());
 	}
 	private ImageHolderDTO addSelfLink(ImageHolderDTO dto) {
 		dto.addLink(linkService.getImagelink(dto));

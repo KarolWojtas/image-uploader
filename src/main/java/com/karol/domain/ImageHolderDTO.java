@@ -1,9 +1,11 @@
 package com.karol.domain;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Links;
@@ -23,11 +25,17 @@ public class ImageHolderDTO {
 	private int height;
 	private String username;
 	private boolean isPublic;
-	private LocalDateTime timestamp;
+	private ZonedDateTime timestamp;
 	private List<Link> links = new ArrayList<Link>();
 	
 	public ImageHolderDTO addLink(Link ...links) {
 		Arrays.asList(links).forEach(this.links::add);
+		return this;
+	}
+	public ImageHolderDTO convertToGivenTimeZone(TimeZone tz) {
+		if(this.getTimestamp() !=null) {
+			this.setTimestamp(this.getTimestamp().withZoneSameInstant(tz.toZoneId()));
+		}
 		return this;
 	}
 }

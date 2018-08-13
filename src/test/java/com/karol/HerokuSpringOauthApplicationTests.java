@@ -1,5 +1,7 @@
 package com.karol;
 
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +13,7 @@ public class HerokuSpringOauthApplicationTests {
 
 	@Test
 	public void contextLoads() {
+		
 	}
-
+	
 }
