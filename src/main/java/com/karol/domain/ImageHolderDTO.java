@@ -11,13 +11,17 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Links;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.karol.domain.mappers.MyDateSerializer;
 
 import lombok.Data;
 
 @Data
+@JsonSerialize(using = MyDateSerializer.class)
 public class ImageHolderDTO {
 	private Long id;
 	private String description;
