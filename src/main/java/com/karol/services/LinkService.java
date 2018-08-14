@@ -26,7 +26,9 @@ public class LinkService {
 			linkList.add(this.addPublicImagePageLink(page.getNumber()-1, page.getSize(), "prev"));
 		}
 		if(!page.isLast()) {
-			linkList.add(this.addPublicImagePageLink(page.getNumber()+1, page.getSize(), "next"));
+			
+				linkList.add(this.addPublicImagePageLink(page.getNumber()+1, page.getSize(), "next"));
+			
 			linkList.add(this.addPublicImagePageLink(page.getTotalPages()-1, page.getSize(), "last"));
 		}
 		return linkList;
