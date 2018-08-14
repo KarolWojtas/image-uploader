@@ -60,7 +60,7 @@ public class ImageController {
 		throw new UnauthorizedClientException("bad credentials");
 	}
 	@GetMapping("/images/{id}/info")
-	@PostAuthorize("returnObject.public or authentication.name==returnObject.user.username")
+	@PostAuthorize("returnObject.public or authentication.name==returnObject.username")
 	public ImageHolderDTO getImageDto(@PathVariable Long id){
 		return imageService.getImageDto(id);
 	}
