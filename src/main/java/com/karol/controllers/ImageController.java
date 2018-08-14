@@ -49,6 +49,7 @@ public class ImageController {
 		this.imageService = imageService;
 		this.imagePageMapper = imagePageMapper;
 	}
+	
 	@GetMapping("/images/{id}")
 	public ResponseEntity<byte[]> getImage(@PathVariable Long id){
 		ImageHolder ih = imageService.getImage(id);

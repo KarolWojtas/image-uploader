@@ -8,12 +8,23 @@ spring:
       ddl-auto: create-drop
     properties:
       hibernate:
-       jdbc:
-        lob:
-         non_contextual_creation: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
   profiles:
     active:
     - dev
   servlet:
     multipart:
       max-file-size: 10MB
+facebook:
+  client:
+    clientId: 233668646673605
+    clientSecret: 33b17e044ee6a4fa383f46ec6e28ea1d
+    accessTokenUri: https://graph.facebook.com/oauth/access_token
+    userAuthorizationUri: https://www.facebook.com/dialog/oauth
+    tokenName: oauth_token
+    authenticationScheme: query
+    clientAuthenticationScheme: form
+  resource:
+    userInfoUri: https://graph.facebook.com/me

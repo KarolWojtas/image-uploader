@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 import org.springframework.stereotype.Component;
 
 import com.karol.domain.CustomUserDetails;
@@ -29,6 +30,7 @@ public class Bootstrap implements CommandLineRunner{
 	private UserDetailsRepository repository;
 	private PasswordEncoder passwordEncoder;
 	private ImageHolderRepository imageRepository;
+	
 	@Autowired
 	public Bootstrap(UserDetailsRepository repository, PasswordEncoder passwordEncoder,
 			ImageHolderRepository imageRepository) {
@@ -45,6 +47,7 @@ public class Bootstrap implements CommandLineRunner{
 	@Override
 	@Transactional
 	public void run(String... args) throws Exception {
+		
 		if(repository.count()<=0) {
 			CustomUserDetails user = new CustomUserDetails();
 			user.setFirstName("Karol");

@@ -65,7 +65,8 @@ public class Oauth2AuthServerConfig extends AuthorizationServerConfigurerAdapter
 				.authorizedGrantTypes("password","authorization_code", "refresh_token")
 				.accessTokenValiditySeconds(3600)
 				.refreshTokenValiditySeconds(120)
-				.scopes("read");
+				.scopes("read")
+				;
 	}
 	@Bean
 	public TokenStore tokenStore() {

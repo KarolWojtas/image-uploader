@@ -33,6 +33,7 @@ public class ImageHolderDTO {
 		return this;
 	}
 	public ImageHolderDTO convertToGivenTimeZone(TimeZone tz) {
+		
 		if(this.getTimestamp() !=null) {
 			this.setTimestamp(this.getTimestamp().withZoneSameInstant(tz.toZoneId()));
 		}
