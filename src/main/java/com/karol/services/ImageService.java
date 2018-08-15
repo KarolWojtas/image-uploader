@@ -2,6 +2,7 @@ package com.karol.services;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.karol.domain.CustomUserDetails;
 import com.karol.domain.ImageHolder;
 import com.karol.domain.ImageHolderDTO;
+import com.karol.domain.PageDto;
 import com.karol.exceptions.BadFormatException;
 
 public interface ImageService {
@@ -18,6 +20,6 @@ public interface ImageService {
 	boolean saveImage(MultipartFile image, CustomUserDetails user, String description, boolean isPublic) throws IOException, BadFormatException;
 	ImageHolderDTO getImageDto(Long imageId);
 	void deleteImage(Long imageId);
-	Page<ImageHolder> getAllImagesByUser(CustomUserDetails user, Pageable page);
-	Page<ImageHolder> getPaginatedPublicImages(Pageable page);
+	PageDto<ImageHolderDTO> getAllImagesByUser(CustomUserDetails user, Pageable page, TimeZone tz);
+	PageDto<ImageHolderDTO> getPaginatedPublicImages(Pageable page, TimeZone tz);
 }

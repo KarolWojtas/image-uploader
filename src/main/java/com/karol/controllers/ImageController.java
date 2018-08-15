@@ -37,17 +37,16 @@ import com.karol.services.ImageService;
 import com.karol.services.UserDetailsService;
 
 @RestController
-@CrossOrigin("http://localhost:4200")
 public class ImageController {
 	private UserDetailsService userService;
 	private ImageService imageService;
-	private ImagePageMapper imagePageMapper;
+	
 	@Autowired
-	public ImageController(UserDetailsService userService, ImageService imageService, ImagePageMapper imagePageMapper) {
+	public ImageController(UserDetailsService userService, ImageService imageService) {
 		super();
 		this.userService = userService;
 		this.imageService = imageService;
-		this.imagePageMapper = imagePageMapper;
+		
 	}
 	
 	@GetMapping("/images/{id}")
@@ -80,10 +79,9 @@ public class ImageController {
 	public PageDto<ImageHolderDTO> pagePagedPublicImages(@RequestParam(name="page", defaultValue="0")String page, 
 			@RequestParam(value="size", defaultValue="1")String size, TimeZone timeZone){
 		
-		PageDto<ImageHolderDTO> pageDto = imagePageMapper.pageToPageDto(
-				imageService.getPaginatedPublicImages(PageRequest.of(Integer.valueOf(page), Integer.valueOf(size))), true, timeZone
-				) ;
-		return pageDto;
+		
+		return	imageService.getPaginatedPublicImages(PageRequest.of(Integer.valueOf(page), Integer.valueOf(size)), timeZone);
+		
 	}
 	@DeleteMapping("/images/{id}")
 	public void deleteImage(@PathVariable Long id) {
@@ -98,9 +96,6 @@ public class ImageController {
 			@RequestParam(value="size", defaultValue="3") String size, TimeZone timeZone){
 		
 		CustomUserDetails user = userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-		return imagePageMapper.pageToPageDto(
-					imageService.getAllImagesByUser(user, PageRequest.of(Integer.valueOf(page), Integer.valueOf(size))),
-					false,
-					timeZone);
+		return imageService.getAllImagesByUser(user, PageRequest.of(Integer.valueOf(page), Integer.valueOf(size)), timeZone);
 	}
 }

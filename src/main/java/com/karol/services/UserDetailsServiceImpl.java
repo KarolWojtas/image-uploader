@@ -41,8 +41,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 
 	@Override
 	public boolean isUsernameAvailable(String username) {
-		CustomUserDetails user = userRepository.findByUsername(username);
-		return user==null;
+		return username != userRepository.findByUsername(username).getUsername();
 	}
 
 

@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -31,13 +32,16 @@ import com.karol.domain.AcceptedImageFormats;
 import com.karol.domain.CustomUserDetails;
 import com.karol.domain.ImageHolder;
 import com.karol.domain.ImageHolderDTO;
+import com.karol.domain.PageDto;
 import com.karol.domain.mappers.ImageHolderMapper;
+import com.karol.domain.mappers.ImagePageMapper;
 import com.karol.exceptions.BadFormatException;
 @Service
 public class ImageServiceImpl implements ImageService{
 	private ImageHolderRepository imageRepository;
 	private ImageHolderMapper mapper;
 	private LinkService linkService;
+	private ImagePageMapper imagePageMapper;
 	
 	@Autowired
 	public ImageServiceImpl(ImageHolderRepository imageRepository, ImageHolderMapper mapper, LinkService linkService) {
@@ -45,6 +49,7 @@ public class ImageServiceImpl implements ImageService{
 		this.imageRepository = imageRepository;
 		this.mapper = mapper;
 		this.linkService = linkService;
+		this.imagePageMapper = new ImagePageMapper(mapper, linkService);
 	}
 
 	@Override
@@ -95,14 +100,14 @@ public class ImageServiceImpl implements ImageService{
 
 	@Override
 	@Transactional
-	public Page<ImageHolder> getAllImagesByUser(CustomUserDetails user, Pageable page) {
-		return imageRepository.findAllByUserOrderByTimestampDesc(user, page);
+	public PageDto<ImageHolderDTO> getAllImagesByUser(CustomUserDetails user, Pageable page, TimeZone tz) {
+		return imagePageMapper.pageToPageDto(imageRepository.findAllByUserOrderByTimestampDesc(user, page),false,tz);
 		
 	}
 
 	@Override
-	public Page<ImageHolder> getPaginatedPublicImages(Pageable page) {
-		return imageRepository.findByIsPublicOrderByTimestampDesc(true, page);
+	public PageDto<ImageHolderDTO> getPaginatedPublicImages(Pageable page, TimeZone tz) {
+		return imagePageMapper.pageToPageDto(imageRepository.findByIsPublicOrderByTimestampDesc(true, page), true, tz);
 	}
 
 	
