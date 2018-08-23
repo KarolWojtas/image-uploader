@@ -1,33 +1,31 @@
 package com.karol.services;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.security.Principal;
+import java.io.OutputStream;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
-import java.util.List;
 import java.util.TimeZone;
-import java.util.stream.Collectors;
 
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.mvc.ControllerLinkBuilderFactory;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.data.domain.Pageable;
+
+
+
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
+
 import org.springframework.web.multipart.MultipartFile;
 
-import com.karol.controllers.ImageController;
 import com.karol.domain.AcceptedImageFormats;
 import com.karol.domain.CustomUserDetails;
 import com.karol.domain.ImageHolder;
@@ -64,7 +62,7 @@ public class ImageServiceImpl implements ImageService{
 		
 		ImageHolder imageHolder = ImageHolder.builder().description(description)
 								.imageFormat(extractFormat(image))
-								.image(image.getBytes())
+								.image(this.compressImage(image, 0.5f))
 								.user(user)
 								.isPublic(isPublic)
 								.timestamp(Instant.now().atZone(ZoneId.of("GMT+00:00")))
@@ -108,6 +106,27 @@ public class ImageServiceImpl implements ImageService{
 	@Override
 	public PageDto<ImageHolderDTO> getPaginatedPublicImages(Pageable page, TimeZone tz) {
 		return imagePageMapper.pageToPageDto(imageRepository.findByIsPublicOrderByTimestampDesc(true, page), true, tz);
+	}
+	private byte[] compressImage(MultipartFile file, float compressionQuality) {
+		byte[] imageCompressed = null;
+		try (ByteArrayOutputStream os = new ByteArrayOutputStream() ; ImageOutputStream ios = ImageIO.createImageOutputStream(os)){
+			BufferedImage image = ImageIO.read(file.getInputStream());
+			
+			ImageWriter imageWriter = ImageIO.getImageWritersByFormatName("jpg").next();
+			imageWriter.setOutput(ios);
+			ImageWriteParam param = imageWriter.getDefaultWriteParam();
+			param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+			param.setCompressionQuality(compressionQuality);
+			imageWriter.write(null, new IIOImage(image, null, null), param);
+			imageCompressed = os.toByteArray();
+			
+			
+			imageWriter.dispose();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return imageCompressed;
 	}
 
 	
