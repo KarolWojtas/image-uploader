@@ -10,17 +10,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.common.exceptions.UnauthorizedClientException;
+import org.springframework.security.oauth2.common.exceptions.UnauthorizedUserException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -49,14 +52,14 @@ public class ImageController {
 		
 	}
 	
-	@GetMapping("/images/{id}")
+	@GetMapping(value="/images/{id}", produces= {"image/jpeg"})
 	public ResponseEntity<byte[]> getImage(@PathVariable Long id){
 		ImageHolder ih = imageService.getImage(id);
 		if(ih.getUser().getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getName())||ih.isPublic()) {
 			byte[] imageBytes = imageService.getImage(id).getImage();
 			return ResponseEntity.ok(imageBytes);
 		}
-		throw new UnauthorizedClientException("bad credentials");
+		throw new UnauthorizedUserException("bad credentials");
 	}
 	@GetMapping("/images/{id}/info")
 	@PostAuthorize("returnObject.public or authentication.name==returnObject.username")
@@ -68,8 +71,13 @@ public class ImageController {
 	public ResponseEntity<String> saveImage(@RequestParam("file") MultipartFile file,
 						@RequestParam("description")String description, @RequestParam("isPublic") boolean isPublic) throws IOException, BadFormatException{
 		CustomUserDetails user = userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-			imageService.saveImage(file, user,description, isPublic);
-			return ResponseEntity.accepted().build();
+			boolean isSaveSuccessful = imageService.saveImage(file, user,description, isPublic);
+			if(isSaveSuccessful) {
+				return ResponseEntity.accepted().build();
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+			}
+			
 		
 		
 	}

@@ -21,6 +21,7 @@ public class MyDateSerializer extends StdSerializer<ImageHolderDTO>{
 	public void serialize(ImageHolderDTO dto, JsonGenerator jgen, SerializerProvider sp) throws IOException {
 			jgen.writeStartObject();
 			jgen.writeNumberField("id", dto.getId());
+			jgen.writeStringField("description", dto.getDescription());
 			jgen.writeStringField("username", dto.getUsername());
 			jgen.writeBooleanField("isPublic", dto.isPublic());
 			jgen.writeObjectField("timestamp", dto.getTimestamp().toInstant().toEpochMilli());

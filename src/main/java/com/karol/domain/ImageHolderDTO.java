@@ -18,9 +18,15 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.karol.domain.mappers.MyDateSerializer;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonSerialize(using = MyDateSerializer.class)
 public class ImageHolderDTO {
 	private Long id;

@@ -39,7 +39,7 @@ public class UserControllerTest {
 	@Before
 	public void setUp() throws Exception {
 	}
-	//TODO create dto object
+	
 	@Test
 	@WithMockUser(username="user", password="password", roles= {"USER","ADMIN"})
 	public void testGetUserDetails() throws Exception {
